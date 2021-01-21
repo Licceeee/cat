@@ -1,0 +1,31 @@
+.center {
+    text-align: center;
+}
+
+#cat-img {
+    max-width: 300px;
+    height: auto;
+}
+
+.center-img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.score-icon {
+    transform: scale(2, 2);
+    display: block;
+    padding: 1%;
+    margin-bottom: 4%;
+    color: rgb(0, 0, 0);
+}
+
+.score {
+    font-size: larger;
+}
+
+.custom-btn {
+    margin-right: 4px;
+}
