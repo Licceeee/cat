@@ -15,8 +15,6 @@
 // petted.
 
 // eat
-// drink
-// toilet
 // play
 // scratch
 // furr
@@ -53,11 +51,12 @@ const cuteImg = "https://media.tenor.com/images/eff22afc2220e9df92a7aa2f53948f9f
 const petImg = "https://i.pinimg.com/originals/9f/e4/f0/9fe4f00d31b7489c1b5bcd5d5cbd369a.gif";
 const noPetTodayImg = "https://i.gifer.com/origin/e3/e3827ae76784f68d7023ce1870bfa462_w200.gif";
 const playImg = "https://i.pinimg.com/originals/c3/2b/fa/c32bfa16bcf864e478d3ddfe32440268.gif";
-
+const lonelyImg = "https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif";
+const happyCatImg = "https://media1.giphy.com/media/Z9si13vmAaTKMks7io/giphy.gif";
 
 // ------------------------- >> BTN MESSAGES
 const startMsgCreate = "Create a sweet kitten";
-const terminateMsg = "Terminate this creature";
+const terminateMsg = "Terminate the creature";
 
 
 // ------------------------- >> BTN's
@@ -77,7 +76,7 @@ class Cat {
         hungry = 50,
         tired = 0,
         lonely = 100,
-        happy = 0,
+        happy = 30,
         bored = 100,
         angry = 100
     ) {
@@ -114,8 +113,25 @@ class Cat {
         this._bored = value;
     }
 
+    // TODO action cat is bored
+    // TODO action cat is angry
+    // TODO action cat is lonely
+
+
+
+    timePassesBy() {
+        this.updateMood(-randomNum(25), // happy
+            randomNum(25), // tired
+            randomNum(25), // hungry
+            randomNum(25), // bored
+            randomNum(25), // angry
+            randomNum(25), // lonely
+        );
+    }
+
     // Check mood of cat and adjust icon colors and actions accordingly
-    checkMood() {
+    checkMood(msg = "") {
+        console.log(`${msg}`);
         const moods = [
             { name_: "angry", value_: this._angry, type: "upIsBad" },
             { name_: "hungry", value_: this._hungry, type: "upIsBad" },
@@ -127,7 +143,6 @@ class Cat {
 
         // Change Icon colors
         for (let mood of moods) {
-            console.log(mood.name);
             if (mood.type === "upIsBad") {
                 if (mood.value_ < 50) { document.getElementById(mood.name_).style.color = "green"; }
                 if (mood.value_ >= 50 && mood.value_ < 80) { document.getElementById(mood.name_).style.color = "orange"; }
@@ -140,22 +155,17 @@ class Cat {
             }
         }
 
-        // TODO Change cat behaviour if else
-    }
-
-    // Cat actions
-    scratch() {
-        // TODO scratch human
-    }
-
-    // TODO cat is bored - make miaw sounds
-    // TODO cat is angry - scream
-    // TODO cat is lonely - be sad 
-
-
-    makeDrama() {
-        changeImg(dramaImg[randomNum(dramaImg.length)]);
-        setTimeout(function() { changeImg(angryImg) }, 2000);
+        // if cat too hungry, make a scene
+        if (this._hungry > 85) {
+            this.makeDrama();
+        }
+        // } else if (this._lonely > 70) {
+        //     this.drawAttention();
+        // } else if (this._happy > 80) {
+        //     this.happyCat();
+        // };
+        // TODO make this work:  setTimeout(function() { this.timePassesBy(); }, 5000);
+        // err: this.timePassesBy is not a function
     }
 
     // Update mood
@@ -163,39 +173,58 @@ class Cat {
         // Happy
         this._happy += happy;
         if (this._happy < 0) { this._happy = 0; }
+        if (this._happy > 100) { this._happy = 100; }
         happyScore.textContent = this._happy;
         // Tired
         this._tired += tired;
         if (this._tired < 0) { this._tired = 0; }
+        if (this._tired > 100) { this._tired = 100; }
         tiredScore.textContent = this._tired;
         // Hungry
         this._hungry += hungry;
         if (this._hungry < 0) { this._hungry = 0; }
+        if (this._hungry > 100) { this._hungry = 100; }
         hungryScore.textContent = this._hungry;
         // Bored
         this._bored += bored;
         if (this._bored < 0) { this._bored = 0; }
+        if (this._bored > 100) { this._bored = 100; }
         boredScore.textContent = this._bored;
         // Angry
         this._angry += angry;
         if (this._angry < 0) { this._angry = 0; }
+        if (this._angry > 100) { this._angry = 100; }
         angryScore.textContent = this._angry;
         // Lonely
         this._lonely += lonely;
         if (this._lonely < 0) { this._lonely = 0; }
+        if (this._lonely > 100) { this._lonely = 100; }
         lonelyScore.textContent = this._lonely;
 
-        this.checkMood();
+        this.checkMood("coming from updatemood");
 
-        // if cat too hungry, make a scene
-        if (this._hungry > 100) {
-            console.log('Cat is too hangryyy');
-            this.makeDrama();
-        }
-        // TODO add more actions of cat
     }
 
-    // change img and update mood
+
+    makeDrama() {
+        changeImg(dramaImg[randomNum(dramaImg.length)]);
+        setTimeout(function() { changeImg(angryImg); }, 2000);
+        setTimeout(function() { this.checkMood("from make drama"); }, 2000);
+        // TODO wth is happening
+    }
+
+    drawAttention() {
+        changeImg(lonelyImg);
+        setTimeout(() => { this.checkMood("from draw attention"); }, 2000);
+
+    }
+
+    happyCat() {
+        changeImg(happyCatImg);
+        setTimeout(function() { this.checkMood("from happy cat"); }, 2000);
+    }
+
+    // change img and call update mood
     play() {
         changeImg(playImg);
         // happy, tired, hungry, bored, angry, lonely
@@ -229,6 +258,14 @@ class Cat {
 
     feed() {
         changeImg(eatingImg);
+        this.updateMood(
+            randomNum(25), // happy
+            -randomNum(25), // tired
+            -randomNum(25), // hungry
+            -randomNum(25), // bored
+            -randomNum(25), // angry
+            -randomNum(25), // lonely
+        );
     }
 
     // TODO random actions sometimes do unexpected things 
@@ -239,6 +276,7 @@ class Cat {
 const kitty = new Cat();
 
 
+// START
 actionBtn.addEventListener("click", function() {
     changeImg(cuteImg);
     actionBtn.hidden = true;
@@ -249,7 +287,9 @@ actionBtn.addEventListener("click", function() {
 });
 
 playBtn.addEventListener("click", function() {
-    kitty.play()
+    console.log("jooooo");
+    kitty.play();
+
 });
 
 petBtn.addEventListener("click", function() {
@@ -262,18 +302,8 @@ feedBtn.addEventListener("click", function() {
 
 // TODO settimer and randomly chose if cat is becoming tired angry or lonely
 
+// Terminate Cat
 terminateBtn.addEventListener("click", function() {
     changeImg(killCatImg);
-    setTimeout(function() { location.reload() }, 4000);
-    // actionBtn.hidden = false;
-    // playBtn.hidden = true;
-    // feedBtn.hidden = true;
-    // petBtn.hidden = true;
-    // terminateBtn.hidden = true;
-    // kitty.angry = 0;
-    // kitty.hungry = 0;
-    // kitty.lonely = 0;
-    // kitty.tired = 0;
-    // kitty.happy = 0;
-    // kitty.bored = 0;
+    setTimeout(function() { location.reload() }, 3000);
 });
