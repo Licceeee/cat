@@ -1,3 +1,3 @@
 # cat game
 
-https://seiya-testing.github.io/cat
+https://licceeee.github.io/cat
